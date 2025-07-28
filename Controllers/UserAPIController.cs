@@ -132,6 +132,15 @@ namespace TourTravel.Controllers
             return await query.ToListAsync();
         }
         #endregion
+
+        #region TotalUser       
+        [HttpGet("UserCount")]
+        public async Task<IActionResult> UserCount()
+        {
+            var userCount = await _context.MstUsers.CountAsync();
+            return Ok(new {Count = userCount});
+        }
+        #endregion
     }
 }
 
