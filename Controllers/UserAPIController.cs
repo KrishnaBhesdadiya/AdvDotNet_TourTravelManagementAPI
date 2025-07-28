@@ -141,5 +141,26 @@ namespace TourTravel.Controllers
             return Ok(new {Count = userCount});
         }
         #endregion
+
+        #region AdminStats
+        [HttpGet("admin/stats")]
+        public IActionResult GetAdminStats()
+        {
+            var stats = new
+            {
+                UserCount = _context.MstUsers.Count(),
+                CustomerCount = _context.MstCustomers.Count(),
+                PackageCount = _context.MstPackages.Count(),
+                DestinationCount = _context.MstDestinations.Count(),
+                PackageDestinationCount = _context.PackageDestinations.Count(),
+                ItineraryCount = _context.Itineraries.Count(),
+                BookingCount = _context.Bookings.Count(),
+                PaymentCount = _context.Payments.Count(),
+                TravelerCount = _context.MstTravelers.Count()
+            };
+
+            return Ok(stats);
+        }
+        #endregion
     }
 }

@@ -134,5 +134,16 @@ namespace TourTravel.Controllers
                 .ToListAsync();
         }
         #endregion
+
+        #region BookingDropDown
+        // Get all Booking (for dropdown)
+        [HttpGet("dropdown/Booking")]
+        public async Task<ActionResult<IEnumerable<object>>> GetBookings()
+        {
+            return await _context.Bookings
+                .Select(c => new { c.BookingId, c.BookingCode })
+                .ToListAsync();
+        }
+        #endregion
     }
 }
