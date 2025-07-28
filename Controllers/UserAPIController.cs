@@ -143,5 +143,3 @@ namespace TourTravel.Controllers
         #endregion
     }
 }
-
-//A record is inserted with userID 100000 (1 lakh) to check delete operation is working or not
