@@ -21,7 +21,24 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetItinerary()
         {
-            var itineraries = await _context.Itineraries.ToListAsync();
+            var itineraries = await _context.Itineraries.Include(u => u.User).Include(u => u.Package)
+                .Select(c => new
+                {
+                    c.ItineraryId,
+                    c.PackageId,
+                    c.DayNumber,
+                    c.ActivityName,
+                    c.ActivityDescription,
+                    c.LocationDetails,
+                    c.StartTime,
+                    c.EndTime,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName,
+                    PackageName = c.Package.PackageName
+                })
+                .ToListAsync();
             return Ok(itineraries);
         }
         #endregion

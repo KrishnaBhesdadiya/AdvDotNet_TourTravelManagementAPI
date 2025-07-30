@@ -24,7 +24,23 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCustomer()
         {
-            var customers = await _context.MstCustomers.Include(s => s.User).ToListAsync();
+            var customers = await _context.MstCustomers.Include(s => s.User)
+                .Select(c => new
+                {
+                    c.CustomerId,
+                    c.FirstName,
+                    c.LastName,
+                    c.Email,
+                    c.PhoneNumber,
+                    c.Address,
+                    c.DateOfBirth,
+                    c.Nationality,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName
+                })
+                .ToListAsync();
             return Ok(customers);
         }
         #endregion
@@ -139,13 +155,5 @@ namespace TourTravel.Controllers
         }
         #endregion
 
-        #region TotalCustomer       
-        [HttpGet("CustomerCount")]
-        public async Task<IActionResult> CustomerCount()
-        {
-            var customerCount = await _context.MstCustomers.CountAsync();
-            return Ok(new { Count = customerCount });
-        }
-        #endregion
     }
 }

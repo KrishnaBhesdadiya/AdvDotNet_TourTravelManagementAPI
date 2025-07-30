@@ -21,7 +21,29 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBooking()
         {
-            var bookings = await _context.Bookings.ToListAsync();
+            var bookings = await _context.Bookings.Include(u => u.User).Include(u => u.Package).Include(u => u.Customer)
+                .Select(c => new
+                {
+                    c.BookingId,
+                    c.BookingCode,
+                    c.CustomerId,
+                    c.PackageId,
+                    c.BookingDate,
+                    c.TravelStartDate,
+                    c.NumberOfAdults,
+                    c.NumberOfChildren,
+                    c.TotalBookingPrice,
+                    c.PaymentStatus,
+                    c.BookingStatus,
+                    c.SpecialRequests,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName,
+                    PackageName = c.Package.PackageName,
+                    FirstName = c.Customer.FirstName
+                })
+                .ToListAsync();
             return Ok(bookings);
         }
         #endregion

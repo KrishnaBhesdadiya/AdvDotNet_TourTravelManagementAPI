@@ -24,7 +24,28 @@ namespace TourTravel.Controllers
         public async Task<IActionResult> GetPackages()
         {
             // With eager loading example (if needed): Include(p => p.User)
-            var packages = await _context.MstPackages.ToListAsync();
+            var packages = await _context.MstPackages.Include(u => u.User)
+                .Select(c => new
+                {
+                    c.PackageId,
+                    c.PackageCode,
+                    c.PackageName,
+                    c.Description,
+                    c.Price,
+                    c.DurationDays,
+                    c.DurationNights,
+                    c.AvailabilityStatus,
+                    c.Category,
+                    c.IncludedFeatures,
+                    c.ExcludedFeatures,
+                    c.ImageUrl,
+                    c.CancellationPolicy,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName
+                })
+                .ToListAsync();
             return Ok(packages);
         }
         #endregion

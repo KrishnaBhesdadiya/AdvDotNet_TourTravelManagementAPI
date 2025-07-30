@@ -36,7 +36,7 @@ public partial class Booking
 
     public DateTime Modified { get; set; }
     [JsonIgnore]
-    public virtual MstCustomer Customer { get; set; } = null!;
+    public virtual MstCustomer? Customer { get; set; } = null!;
     [JsonIgnore]
     public virtual ICollection<MstTraveler> MstTravelers { get; set; } = new List<MstTraveler>();
     [JsonIgnore]

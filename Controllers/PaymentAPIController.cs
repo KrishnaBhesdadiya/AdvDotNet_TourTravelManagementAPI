@@ -21,7 +21,22 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPayment()
         {
-            var payments = await _context.Payments.ToListAsync();
+            var payments = await _context.Payments.Include(u => u.User).Include(u => u.PaymentNavigation)
+                .Select(c => new
+                {
+                    c.PaymentId,
+                    c.BookingId,
+                    c.PaymentDate,
+                    c.Amount,
+                    c.PaymentMethod,
+                    c.TransactionId,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName,
+                    BookingCode = c.PaymentNavigation.BookingCode
+                })
+                .ToListAsync();
             return Ok(payments);
         }
         #endregion

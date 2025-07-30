@@ -22,7 +22,20 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDestination()
         {
-            var destinations = await _context.MstDestinations.ToListAsync();
+            var destinations = await _context.MstDestinations.Include(u=>u.User)
+                .Select(c => new
+                {
+                    c.DestinationId,
+                    c.DestinationCode,
+                    c.DestinationName,
+                    c.Country,
+                    c.Description,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName
+                })
+                .ToListAsync();
             return Ok(destinations);
         }
         #endregion

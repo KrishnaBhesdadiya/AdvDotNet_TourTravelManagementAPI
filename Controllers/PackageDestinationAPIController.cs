@@ -22,7 +22,21 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPackageWiseDesignations()
         {
-            var designations = await _context.PackageDestinations.ToListAsync();
+            var designations = await _context.PackageDestinations.Include(u => u.User).Include(u => u.Package).Include(u => u.Destination)
+                .Select(c => new
+                {
+                    c.PackageDestinationId,
+                    c.PackageId,
+                    c.DestinationId,
+                    c.OrderInTour,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName,
+                    PackageName = c.Package.PackageName,
+                    DestinationName = c.Destination.DestinationName,
+                })
+                .ToListAsync();
             return Ok(designations);
         }
         #endregion

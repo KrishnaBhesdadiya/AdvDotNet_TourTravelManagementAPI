@@ -21,7 +21,26 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MstTraveler>>> GetTraveler()
         {
-            return await _context.MstTravelers.ToListAsync();
+            var traveler = await _context.MstTravelers.Include(u => u.User).Include(u => u.Booking)
+                .Select(c => new
+                {
+                    c.TravelerId,
+                    c.BookingId,
+                    c.FirstName,
+                    c.LastName,
+                    c.DateOfBirth,
+                    c.PassportNumber,
+                    c.PassportExpiryDate,
+                    c.EmergencyContactName,
+                    c.EmergencyContactNumber,
+                    c.UserId,
+                    c.Created,
+                    c.Modified,
+                    UserName = c.User.UserName,
+                    BookingCode = c.Booking.BookingCode
+                })
+                .ToListAsync();
+            return Ok(traveler);
         }
         #endregion
 
