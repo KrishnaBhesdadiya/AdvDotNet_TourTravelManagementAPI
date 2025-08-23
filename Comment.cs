@@ -13,3 +13,8 @@
 //    return Ok(new { Count = customerCount });
 //}
 //#endregion
+
+//In Program.cs For Validation
+
+//builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly()); -> for Another package without aspnet
+//builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>(); -> For Manualy Apply Validations on Single - Single table

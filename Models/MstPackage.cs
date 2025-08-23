@@ -33,7 +33,6 @@ public partial class MstPackage
     public string CancellationPolicy { get; set; } = null!;
 
     public int UserId { get; set; }
-
     public DateTime Created { get; set; }
 
     public DateTime Modified { get; set; }

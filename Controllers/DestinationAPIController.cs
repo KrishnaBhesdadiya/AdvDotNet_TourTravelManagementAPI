@@ -98,6 +98,7 @@ namespace TourTravel.Controllers
             }
 
             existingDestination.DestinationName = destination.DestinationName;
+            existingDestination.DestinationCode = destination.DestinationCode;
             existingDestination.Description = destination.Description;
             existingDestination.Country = destination.Country;
             existingDestination.UserId = destination.UserId;
@@ -114,7 +115,7 @@ namespace TourTravel.Controllers
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<MstDestination>>> Filter([FromQuery] string? DestinationName, [FromQuery] string? DestinationCode, [FromQuery] string? Country)
         {
-            var query = _context.MstDestinations.AsQueryable(); // badha int para lakhvana
+            var query = _context.MstDestinations.Include(u => u.User).AsQueryable();
             //Include means User table ma jetla record 6 aene mare Package sathe map krva 6
 
             if (!string.IsNullOrWhiteSpace(DestinationName))

@@ -1,6 +1,7 @@
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using TourTravel.Models;
 using TourTravel.Validators;
@@ -15,9 +16,9 @@ builder.Services.AddSwaggerGen();
 
 
 // Register all validators from this assembly
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-//builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();    
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+//builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 
 builder.Services.AddDbContext<TourManagementContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(name: "myConnectionStrings")));

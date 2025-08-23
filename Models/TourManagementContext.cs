@@ -254,9 +254,7 @@ public partial class TourManagementContext : DbContext
         {
             entity.HasKey(e => e.PaymentId).HasName("PK_MST_Payments");
 
-            entity.Property(e => e.PaymentId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("PaymentID");
+            entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
             entity.Property(e => e.Created)
                 .HasDefaultValueSql("(getdate())")
@@ -269,8 +267,8 @@ public partial class TourManagementContext : DbContext
                 .HasColumnName("TransactionID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.PaymentNavigation).WithOne(p => p.Payment)
-                .HasForeignKey<Payment>(d => d.PaymentId)
+            entity.HasOne(d => d.Booking).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Payments_Bookings");
 

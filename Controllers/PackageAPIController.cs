@@ -80,7 +80,7 @@ namespace TourTravel.Controllers
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<MstPackage>>> Filter([FromQuery] string? PackageName, [FromQuery] string? AvailabilityStatus, [FromQuery] int? DurationDays, [FromQuery] int? Price)
         {
-            var query = _context.MstPackages.AsQueryable(); // badha int para lakhvana
+            var query = _context.MstPackages.Include(p => p.User).AsQueryable();
             //Include means User table ma jetla record 6 aene mare Package sathe map krva 6
 
             if (DurationDays.HasValue)
@@ -145,6 +145,7 @@ namespace TourTravel.Controllers
             }
 
             existingPackage.PackageName = package.PackageName;
+            existingPackage.PackageCode = package.PackageCode;
             existingPackage.Description = package.Description;
             existingPackage.Price = package.Price;
             existingPackage.DurationDays = package.DurationDays;

@@ -21,7 +21,7 @@ namespace TourTravel.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPayment()
         {
-            var payments = await _context.Payments.Include(u => u.User).Include(u => u.PaymentNavigation)
+            var payments = await _context.Payments.Include(u => u.User).Include(u => u.Booking)
                 .Select(c => new
                 {
                     c.PaymentId,
@@ -34,7 +34,7 @@ namespace TourTravel.Controllers
                     c.Created,
                     c.Modified,
                     UserName = c.User.UserName,
-                    BookingCode = c.PaymentNavigation.BookingCode
+                    BookingCode = c.Booking.BookingCode
                 })
                 .ToListAsync();
             return Ok(payments);
@@ -82,7 +82,7 @@ namespace TourTravel.Controllers
         #endregion
 
         #region UpdatePayment         
-        [HttpPut("{UserID}")]
+        [HttpPut("{PaymentID}")]
         public async Task<IActionResult> UpdatePayment(int PaymentID, Payment payment)
         {
             if (PaymentID != payment.PaymentId)

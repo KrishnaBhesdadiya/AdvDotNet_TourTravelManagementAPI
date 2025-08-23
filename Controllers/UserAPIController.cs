@@ -14,11 +14,11 @@ namespace TourTravel.Controllers
 
         #region Configuration Fields 
         private readonly TourManagementContext _context;
-        private readonly IValidator<MstUser> _validator;
-        public UserAPIController(TourManagementContext context, IValidator<MstUser> validator)
+        //private readonly IValidator<MstUser> _validator;
+        public UserAPIController(TourManagementContext context)
         {
             _context = context;
-            _validator = validator;
+            //_validator = validator;
         }
         #endregion
 
@@ -61,20 +61,56 @@ namespace TourTravel.Controllers
         }
         #endregion
 
+        #region Delete Multiple Users
+        [HttpPost("MultipleDelete")]
+        public async Task<IActionResult> DeleteMultipleUser([FromBody] List<int> userIds)
+        {
+            if (userIds == null || !userIds.Any())
+                return BadRequest("No User IDs provided.");
+
+            var users = _context.MstUsers.Where(o => userIds.Contains(o.UserId)).ToList();
+
+            if (!users.Any())
+                return NotFound("No matching users found.");
+
+            try { 
+                _context.MstUsers.RemoveRange(users);
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Users deleted successfully" });
+            }
+            catch (DbUpdateException ex)
+            {
+                // Check if it's a FK constraint violation
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("REFERENCE constraint"))
+                {
+                    return BadRequest(new
+                    {
+                        message = "Cannot delete users because they are referenced in other records.",
+                        error = ex.InnerException.Message
+                    });
+                }
+
+                // Any other DB error
+                return StatusCode(500, new { message = "An error occurred while deleting users.", error = ex.Message });
+            }
+        }
+
+        #endregion
+
         #region InsertUser 
         [HttpPost]
         public async Task<IActionResult> InsertUser(MstUser user)
         {
-            var validationResult = await _validator.ValidateAsync(user);
+            //var validationResult = await _validator.ValidateAsync(user);
 
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors.Select(e => new
-                {
-                    Property = e.PropertyName,
-                    Error = e.ErrorMessage
-                }));
-            }
+            //if (!validationResult.IsValid)
+            //{
+            //    return BadRequest(validationResult.Errors.Select(e => new
+            //    {
+            //        Property = e.PropertyName,
+            //        Error = e.ErrorMessage
+            //    }));
+            //}
             await _context.MstUsers.AddAsync(user);
             await _context.SaveChangesAsync();
             return NoContent();
@@ -160,6 +196,36 @@ namespace TourTravel.Controllers
             };
 
             return Ok(stats);
+        }
+        #endregion
+
+        #region Get Top10
+        [HttpGet("Top10")]
+        public async Task<ActionResult> GetTop10()
+        {
+            try
+            {
+                var users = await _context.MstUsers
+                    .Select(c => new
+                    {
+                        c.UserId,
+                        c.UserName,
+                        c.Password,
+                        c.Role,
+                        c.MobileNo,
+                        c.Email,
+                        c.Created,
+                        c.Modified
+                    })
+                    .Take(10)
+                    .ToListAsync();
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving top users: {ex.Message}");
+            }
         }
         #endregion
     }

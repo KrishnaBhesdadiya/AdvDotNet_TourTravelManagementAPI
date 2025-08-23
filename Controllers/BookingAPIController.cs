@@ -105,6 +105,7 @@ namespace TourTravel.Controllers
 
             existingBooking.CustomerId = booking.CustomerId;
             existingBooking.PackageId = booking.PackageId;
+            existingBooking.BookingCode = booking.BookingCode;
             existingBooking.BookingDate = booking.BookingDate;
             existingBooking.TravelStartDate = booking.TravelStartDate;
             existingBooking.NumberOfAdults = booking.NumberOfAdults;

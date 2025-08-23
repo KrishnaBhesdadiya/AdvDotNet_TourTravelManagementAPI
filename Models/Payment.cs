@@ -24,7 +24,7 @@ public partial class Payment
 
     public DateTime Modified { get; set; }
     [JsonIgnore]
-    public virtual Booking? PaymentNavigation { get; set; } = null!;
+    public virtual Booking? Booking { get; set; } = null!;
     [JsonIgnore]
     public virtual MstUser? User { get; set; } = null!;
 }

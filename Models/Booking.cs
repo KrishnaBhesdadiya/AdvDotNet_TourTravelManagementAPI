@@ -42,7 +42,7 @@ public partial class Booking
     [JsonIgnore]
     public virtual MstPackage? Package { get; set; } = null!;
     [JsonIgnore]
-    public virtual Payment? Payment { get; set; }
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
     [JsonIgnore]
     public virtual MstUser? User { get; set; } = null!;
 }

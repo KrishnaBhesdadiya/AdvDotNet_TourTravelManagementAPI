@@ -121,7 +121,7 @@ namespace TourTravel.Controllers
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<MstCustomer>>> Filter([FromQuery] string? FirstName, [FromQuery] string? LastName, [FromQuery] string? Email, [FromQuery] string? Nationality)
         {
-            var query = _context.MstCustomers.AsQueryable(); // badha int para lakhvana
+            var query = _context.MstCustomers.Include(p => p.User).AsQueryable(); // badha int para lakhvana
             //Include means User table ma jetla record 6 aene mare Package sathe map krva 6
 
             if (!string.IsNullOrWhiteSpace(FirstName))
